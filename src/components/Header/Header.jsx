@@ -1,10 +1,29 @@
 import React, { Component } from 'react';
 import { MenuItem,Navbar, Nav, NavItem, NavDropdown, FormGroup, FormControl, Button, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import firebase from '../../helpers/Firebase.js';
 
 let friendID;
 
 class Header extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			isSignedIn: false,
+			userProfile: null
+		}
+	}
+
+	componentDidMount() {
+	    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged((user) => {
+	      	this.setState({ isSignedIn: !!user, userProfile: user });
+	    });
+ 	 }
+
+ 	 componentWillUnmount() {
+    	this.unregisterAuthObserver();
+  	}
 
 	callWithVideo(video) {
     	const config = { audio: true };
@@ -19,7 +38,7 @@ class Header extends Component {
 				<Navbar fixedTop>
 				  	<Navbar.Header>
 				    	<Navbar.Brand>
-				      		<a href="#home">Video Streamer</a>
+				      		<a href="#home">Share Connect</a>
 				    	</Navbar.Brand>
 				    	<Navbar.Toggle />
 				  	</Navbar.Header>
@@ -51,7 +70,7 @@ class Header extends Component {
 					    	</NavItem>
 					    	<NavDropdown eventKey={3} title="Account" id="basic-nav-dropdown">
 					      		<MenuItem eventKey={3.1}>Profile</MenuItem>
-					      		<MenuItem eventKey={3.2}>Logout</MenuItem>
+					      		<MenuItem eventKey={3.2}>{this.state.isSignedIn ? ("Logout") : ("Login")}</MenuItem>
 					      		<MenuItem divider />
 					      		<MenuItem eventKey={3.4}>Feedback</MenuItem>
 					    	</NavDropdown>

@@ -1,4 +1,3 @@
-/* global SOCKET_HOST */
 import io from 'socket.io-client';
 
 var socket;
